@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/userblog/management/api/controller/interfaces"
+	"github.com/userblog/management/api/controller"
 	"github.com/userblog/management/internal/models"
 	"github.com/userblog/management/internal/service"
 )
@@ -17,7 +17,7 @@ type BlogController struct {
 }
 
 // NewBlogController creates a new blog controller
-func NewBlogController(blogService service.IBlogService) interfaces.IBlogController {
+func NewBlogController(blogService service.IBlogService) controller.IBlogController {
 	return &BlogController{
 		blogService: blogService,
 	}

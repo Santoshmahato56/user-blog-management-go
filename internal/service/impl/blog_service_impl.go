@@ -10,11 +10,11 @@ import (
 
 // BlogService implements the IBlogService interface
 type BlogService struct {
-	blogRepo *repository.BlogRepository
+	blogRepo repository.IBlogRepository
 }
 
 // NewBlogService creates a new blog service
-func NewBlogService(blogRepo *repository.BlogRepository) service.IBlogService {
+func NewBlogService(blogRepo repository.IBlogRepository) service.IBlogService {
 	return &BlogService{
 		blogRepo: blogRepo,
 	}

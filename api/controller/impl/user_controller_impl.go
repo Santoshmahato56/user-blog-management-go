@@ -1,14 +1,13 @@
 package impl
 
 import (
-	"github.com/userblog/management/api/dto"
-	"net/http"
-	"strconv"
-
 	"github.com/gin-gonic/gin"
-	"github.com/userblog/management/api/controller/interfaces"
+	"github.com/userblog/management/api/controller"
+	"github.com/userblog/management/api/dto"
 	"github.com/userblog/management/internal/models"
 	"github.com/userblog/management/internal/service"
+	"net/http"
+	"strconv"
 )
 
 // UserController implements the IUserController interface
@@ -17,7 +16,7 @@ type UserController struct {
 }
 
 // NewUserController creates a new user controller
-func NewUserController(userService service.IUserService) interfaces.IUserController {
+func NewUserController(userService service.IUserService) controller.IUserController {
 	return &UserController{
 		userService: userService,
 	}

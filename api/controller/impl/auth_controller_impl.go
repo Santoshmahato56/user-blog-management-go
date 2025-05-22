@@ -1,13 +1,12 @@
 package impl
 
 import (
-	"github.com/userblog/management/api/dto"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
-	"github.com/userblog/management/api/controller/interfaces"
+	"github.com/userblog/management/api/controller"
+	"github.com/userblog/management/api/dto"
 	"github.com/userblog/management/internal/models"
 	"github.com/userblog/management/internal/service"
+	"net/http"
 )
 
 // AuthController implements the IAuthController interface
@@ -16,7 +15,7 @@ type AuthController struct {
 }
 
 // NewAuthController creates a new authentication controller
-func NewAuthController(authService service.IAuthService) interfaces.IAuthController {
+func NewAuthController(authService service.IAuthService) controller.IAuthController {
 	return &AuthController{
 		authService: authService,
 	}
