@@ -1,0 +1,84 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go specific
+*.o
+*.a
+_obj
+_test
+/vendor/
+/Godeps/
+
+# Output of the go coverage tool
+*.cover
+
+# Project binary
+/user-blog-management-go
+/main
+
+# Dependency directories
+/vendor/
+/go.sum
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+*.sublime*
+*.code-workspace
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Debug files
+debug
+debug.test
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Build output
+/bin/
+/dist/
+/build/
+
+# Test files
+coverage.txt
+profile.out
+
+# Misc
+.DS_Store
+Thumbs.db
+
+
+echo "# user-blog-management-go" >> README.md
+git init
+git add README.md
+git commit -m "project setup"
+git branch -M main
+git remote add origin https://github.com/Santoshmahato56/user-blog-management-go.git
+git push -u origin main

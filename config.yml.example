@@ -1,0 +1,29 @@
+# Sample configuration file
+# Copy this to config.yml and adjust values as needed
+
+app:
+  name: User Blog Management
+  port: "8080"
+  debug: false
+  env: production  # production, development, test
+
+database:
+  type: sqlite       # sqlite, mysql, postgres
+  host: localhost
+  port: "5432"       # 5432 for postgres, 3306 for mysql
+  user: postgres
+  password: postgres
+  name: userblog
+
+jwt:
+  secret: your-secret-key-here
+  expiry: "24"       # token expiry in hours
+
+# Custom values can be added here
+values:
+  # Add any custom key-value pairs you need
+  MAIL_HOST: smtp.example.com
+  MAIL_PORT: "587"
+  MAIL_USERNAME: user
+  MAIL_PASSWORD: password
+  ADMIN_EMAIL: admin@example.com 

@@ -1,0 +1,22 @@
+app:
+  name: User Blog Management
+  port: "8080"
+  debug: false
+  env: development
+
+database:
+  type: sqlite
+  host: localhost
+  port: "5432"
+  user: postgres
+  password: postgres
+  name: userblog
+
+jwt:
+  secret: your-secret-key-here
+  expiry: "24"
+
+# Add any custom values here
+values:
+  MAIL_HOST: smtp.example.com
+  MAIL_PORT: "587"
