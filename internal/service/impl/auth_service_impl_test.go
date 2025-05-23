@@ -3,13 +3,13 @@ package impl_test
 import (
 	"errors"
 	"fmt"
+	"github.com/userblog/management/internal/repository/mocks"
 	"os"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"github.com/userblog/management/internal/mocks"
 	"github.com/userblog/management/internal/models"
 	"github.com/userblog/management/internal/service/impl"
 )

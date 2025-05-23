@@ -2,11 +2,11 @@ package impl_test
 
 import (
 	"errors"
+	"github.com/userblog/management/internal/repository/mocks"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"github.com/userblog/management/internal/mocks"
 	"github.com/userblog/management/internal/models"
 	"github.com/userblog/management/internal/service/impl"
 )

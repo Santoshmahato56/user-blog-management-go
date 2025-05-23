@@ -48,7 +48,7 @@ func main() {
 	var blogService = serviceImpl.NewBlogService(blogRepo)
 
 	// Initialize middleware
-	var authMiddleware middleware.IAuthMiddleware = middlewareImpl.NewAuthMiddleware(authService)
+	var authMiddleware = middlewareImpl.NewAuthMiddleware(authService)
 
 	// Initialize controllers
 	var authController = controllerImpl.NewAuthController(authService)
