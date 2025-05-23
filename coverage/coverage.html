@@ -1,0 +1,650 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>impl: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/userblog/management/internal/repository/impl/blog_repository_impl.go (100.0%)</option>
+				
+				<option value="file1">github.com/userblog/management/internal/repository/impl/user_repository_impl.go (100.0%)</option>
+				
+				<option value="file2">github.com/userblog/management/internal/service/impl/auth_service_impl.go (42.7%)</option>
+				
+				<option value="file3">github.com/userblog/management/internal/service/impl/blog_service_impl.go (100.0%)</option>
+				
+				<option value="file4">github.com/userblog/management/internal/service/impl/user_service_impl.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package impl
+
+import (
+        "github.com/jinzhu/gorm"
+        "github.com/userblog/management/internal/models"
+        "github.com/userblog/management/internal/repository"
+)
+
+// BlogRepository implements the IBlogRepository interface
+type BlogRepository struct {
+        db *gorm.DB
+}
+
+// NewBlogRepository creates a new blog repository with the given database connection
+func NewBlogRepository(database *gorm.DB) repository.IBlogRepository <span class="cov8" title="1">{
+        return &amp;BlogRepository{
+                db: database,
+        }
+}</span>
+
+// Create creates a new blog
+func (r *BlogRepository) Create(blog *models.Blog) error <span class="cov8" title="1">{
+        return r.db.Create(blog).Error
+}</span>
+
+// FindByID finds a blog by ID
+func (r *BlogRepository) FindByID(id uint) (*models.Blog, error) <span class="cov8" title="1">{
+        var blog models.Blog
+        err := r.db.Preload("User").First(&amp;blog, id).Error
+        return &amp;blog, err
+}</span>
+
+// Update updates a blog
+func (r *BlogRepository) Update(blog *models.Blog) error <span class="cov8" title="1">{
+        return r.db.Save(blog).Error
+}</span>
+
+// Delete deletes a blog
+func (r *BlogRepository) Delete(id uint) error <span class="cov8" title="1">{
+        return r.db.Delete(&amp;models.Blog{}, id).Error
+}</span>
+
+// List returns a list of blogs with pagination
+func (r *BlogRepository) List(offset, limit int, published bool) ([]models.Blog, int, error) <span class="cov8" title="1">{
+        var blogs []models.Blog
+        var count int
+
+        query := r.db.Model(&amp;models.Blog{})
+        if published </span><span class="cov8" title="1">{
+                query = query.Where("published = ?", true)
+        }</span>
+
+        // Get the total count
+        <span class="cov8" title="1">if err := query.Count(&amp;count).Error; err != nil </span><span class="cov8" title="1">{
+                return nil, 0, err
+        }</span>
+
+        // Get the blogs with pagination
+        <span class="cov8" title="1">err := query.Preload("User").Offset(offset).Limit(limit).Find(&amp;blogs).Error
+        return blogs, count, err</span>
+}
+
+// ListByUser returns a list of blogs by user with pagination
+func (r *BlogRepository) ListByUser(userID uint, offset, limit int) ([]models.Blog, int, error) <span class="cov8" title="1">{
+        var blogs []models.Blog
+        var count int
+
+        // Get the total count
+        if err := r.db.Model(&amp;models.Blog{}).Where("user_id = ?", userID).Count(&amp;count).Error; err != nil </span><span class="cov8" title="1">{
+                return nil, 0, err
+        }</span>
+
+        // Get the blogs with pagination
+        <span class="cov8" title="1">err := r.db.Preload("User").Where("user_id = ?", userID).Offset(offset).Limit(limit).Find(&amp;blogs).Error
+        return blogs, count, err</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package impl
+
+import (
+        "github.com/jinzhu/gorm"
+        "github.com/userblog/management/internal/models"
+        "github.com/userblog/management/internal/repository"
+)
+
+// UserRepository implements the IUserRepository interface
+type UserRepository struct {
+        db *gorm.DB
+}
+
+// NewUserRepository creates a new user repository with the given database connection
+func NewUserRepository(database *gorm.DB) repository.IUserRepository <span class="cov8" title="1">{
+        return &amp;UserRepository{
+                db: database,
+        }
+}</span>
+
+// Create creates a new user
+func (r *UserRepository) Create(user *models.User) error <span class="cov8" title="1">{
+        return r.db.Create(user).Error
+}</span>
+
+// FindByID finds a user by ID
+func (r *UserRepository) FindByID(id uint) (*models.User, error) <span class="cov8" title="1">{
+        var user models.User
+        err := r.db.Preload("Role.Permissions").First(&amp;user, id).Error
+        return &amp;user, err
+}</span>
+
+// FindByUsername finds a user by username
+func (r *UserRepository) FindByUsername(username string) (*models.User, error) <span class="cov8" title="1">{
+        var user models.User
+        err := r.db.Preload("Role.Permissions").Where("username = ?", username).First(&amp;user).Error
+        return &amp;user, err
+}</span>
+
+// FindByEmail finds a user by email
+func (r *UserRepository) FindByEmail(email string) (*models.User, error) <span class="cov8" title="1">{
+        var user models.User
+        err := r.db.Preload("Role.Permissions").Where("email = ?", email).First(&amp;user).Error
+        return &amp;user, err
+}</span>
+
+// Update updates a user
+func (r *UserRepository) Update(user *models.User) error <span class="cov8" title="1">{
+        return r.db.Save(user).Error
+}</span>
+
+// Delete deletes a user
+func (r *UserRepository) Delete(id uint) error <span class="cov8" title="1">{
+        return r.db.Delete(&amp;models.User{}, id).Error
+}</span>
+
+// List returns a list of users with pagination
+func (r *UserRepository) List(offset, limit int) ([]models.User, int, error) <span class="cov8" title="1">{
+        var users []models.User
+        var count int
+
+        // Get the total count
+        if err := r.db.Model(&amp;models.User{}).Count(&amp;count).Error; err != nil </span><span class="cov8" title="1">{
+                return nil, 0, err
+        }</span>
+
+        // Get the users with pagination
+        <span class="cov8" title="1">err := r.db.Preload("Role").Offset(offset).Limit(limit).Find(&amp;users).Error
+        return users, count, err</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package impl
+
+import (
+        "errors"
+        "fmt"
+        "strings"
+        "time"
+
+        "github.com/dgrijalva/jwt-go"
+        "github.com/jinzhu/gorm"
+        "github.com/joho/godotenv"
+        "github.com/userblog/management/internal/models"
+        "github.com/userblog/management/internal/repository"
+        "github.com/userblog/management/internal/service"
+        "github.com/userblog/management/pkg/config"
+)
+
+// AuthService implements the IAuthService interface
+type AuthService struct {
+        userRepo repository.IUserRepository
+}
+
+// NewAuthService creates a new authentication service
+func NewAuthService(userRepo repository.IUserRepository) service.IAuthService <span class="cov8" title="1">{
+        return &amp;AuthService{
+                userRepo: userRepo,
+        }
+}</span>
+
+// Register registers a new user
+func (s *AuthService) Register(user *models.User) error <span class="cov8" title="1">{
+        // Check if username already exists
+        existingUser, err := s.userRepo.FindByUsername(user.Username)
+        if err == nil &amp;&amp; existingUser.ID != 0 </span><span class="cov8" title="1">{
+                return errors.New("username already exists")
+        }</span>
+
+        // Check if email already exists
+        <span class="cov8" title="1">existingUser, err = s.userRepo.FindByEmail(user.Email)
+        if err == nil &amp;&amp; existingUser.ID != 0 </span><span class="cov8" title="1">{
+                return errors.New("email already exists")
+        }</span>
+
+        // Set default role if not provided
+        <span class="cov8" title="1">if user.RoleID == 0 </span><span class="cov8" title="1">{
+                user.RoleID = 2 // Default to 'user' role (ID=2)
+        }</span>
+
+        // Create the user
+        <span class="cov8" title="1">err = s.userRepo.Create(user)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+// Login authenticates a user and returns a JWT token
+func (s *AuthService) Login(username, password string) (string, error) <span class="cov8" title="1">{
+        // Find user by username
+        user, err := s.userRepo.FindByUsername(username)
+        if err != nil </span><span class="cov8" title="1">{
+                if gorm.IsRecordNotFoundError(err) </span><span class="cov0" title="0">{
+                        return "", errors.New("invalid username or password")
+                }</span>
+                <span class="cov8" title="1">return "", err</span>
+        }
+
+        // Validate password
+        <span class="cov8" title="1">if err := user.ValidatePassword(password); err != nil </span><span class="cov8" title="1">{
+                return "", errors.New("invalid username or password")
+        }</span>
+
+        // Generate JWT token
+        <span class="cov0" title="0">token, err := generateToken(user)
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov0" title="0">return token, nil</span>
+}
+
+// GetUserByID returns a user by ID
+func (s *AuthService) GetUserByID(id uint) (*models.User, error) <span class="cov8" title="1">{
+        return s.userRepo.FindByID(id)
+}</span>
+
+// ValidateToken validates a JWT token and returns the user
+func (s *AuthService) ValidateToken(tokenString string) (*models.User, error) <span class="cov0" title="0">{
+        // Load environment variables
+        _ = godotenv.Load()
+        jwtSecret := config.GetOrDefaultString("JWT_SECRET", "")
+
+        // Check if the token is empty
+        if tokenString == "" </span><span class="cov0" title="0">{
+                return nil, errors.New("token is required")
+        }</span>
+
+        // Parse the token
+        <span class="cov0" title="0">token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) </span><span class="cov0" title="0">{
+                // Validate the algorithm
+                if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+                }</span>
+                <span class="cov0" title="0">return []byte(jwtSecret), nil</span>
+        })
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("invalid token: %v", err)
+        }</span>
+
+        // Check if the token is valid
+        <span class="cov0" title="0">if !token.Valid </span><span class="cov0" title="0">{
+                return nil, errors.New("invalid token")
+        }</span>
+
+        // Extract claims
+        <span class="cov0" title="0">claims, ok := token.Claims.(jwt.MapClaims)
+        if !ok </span><span class="cov0" title="0">{
+                return nil, errors.New("invalid token claims")
+        }</span>
+
+        // Check if the token is expired
+        <span class="cov0" title="0">expires := time.Unix(int64(claims["exp"].(float64)), 0)
+        if time.Now().After(expires) </span><span class="cov0" title="0">{
+                return nil, errors.New("token has expired")
+        }</span>
+
+        // Get user ID from claims
+        <span class="cov0" title="0">userID := uint(claims["user_id"].(float64))
+
+        // Load user from database
+        user, err := s.userRepo.FindByID(userID)
+        if err != nil </span><span class="cov0" title="0">{
+                if gorm.IsRecordNotFoundError(err) </span><span class="cov0" title="0">{
+                        return nil, errors.New("user not found")
+                }</span>
+                <span class="cov0" title="0">return nil, err</span>
+        }
+
+        <span class="cov0" title="0">return user, nil</span>
+}
+
+// ValidatePermission checks if a user has the required permission
+func (s *AuthService) ValidatePermission(user *models.User, resource, action string) bool <span class="cov8" title="1">{
+        if user == nil || user.Role.Permissions == nil </span><span class="cov8" title="1">{
+                return false
+        }</span>
+
+        // Check if user has the required permission
+        <span class="cov8" title="1">for _, permission := range user.Role.Permissions </span><span class="cov8" title="1">{
+                if permission.Resource == resource &amp;&amp; permission.Action == action </span><span class="cov8" title="1">{
+                        return true
+                }</span>
+        }
+
+        <span class="cov8" title="1">return false</span>
+}
+
+// ExtractTokenFromHeader extracts the JWT token from the Authorization header
+func (s *AuthService) ExtractTokenFromHeader(authHeader string) (string, error) <span class="cov8" title="1">{
+        if authHeader == "" </span><span class="cov8" title="1">{
+                return "", errors.New("authorization header is required")
+        }</span>
+
+        // Check if the header has the Bearer prefix
+        <span class="cov8" title="1">parts := strings.Split(authHeader, " ")
+        if len(parts) != 2 || parts[0] != "Bearer" </span><span class="cov8" title="1">{
+                return "", errors.New("authorization header format must be Bearer {token}")
+        }</span>
+
+        <span class="cov8" title="1">return parts[1], nil</span>
+}
+
+// generateToken generates a JWT token for a user
+func generateToken(user *models.User) (string, error) <span class="cov0" title="0">{
+        // Load environment variables
+        _ = godotenv.Load()
+        jwtSecret := config.GetOrDefaultString("JWT_SECRET", "your-secret-key")
+        tokenExpiry := config.GetOrDefaultString("TOKEN_EXPIRY", "24")
+
+        // Parse token expiry duration
+        expiryHours := 24 // Default to 24 hours
+        _, err := fmt.Sscanf(tokenExpiry, "%d", &amp;expiryHours)
+        if err != nil </span><span class="cov0" title="0">{
+                expiryHours = 24
+        }</span>
+
+        // Create token claims
+        <span class="cov0" title="0">claims := jwt.MapClaims{
+                "user_id":  user.ID,
+                "username": user.Username,
+                "role_id":  user.RoleID,
+                "exp":      time.Now().Add(time.Hour * time.Duration(expiryHours)).Unix(),
+        }
+
+        // Create token with claims
+        token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+        // Sign token with secret key
+        tokenString, err := token.SignedString([]byte(jwtSecret))
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov0" title="0">return tokenString, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package impl
+
+import (
+        "errors"
+
+        "github.com/userblog/management/internal/models"
+        "github.com/userblog/management/internal/repository"
+        "github.com/userblog/management/internal/service"
+)
+
+// BlogService implements the IBlogService interface
+type BlogService struct {
+        blogRepo repository.IBlogRepository
+}
+
+// NewBlogService creates a new blog service
+func NewBlogService(blogRepo repository.IBlogRepository) service.IBlogService <span class="cov8" title="1">{
+        return &amp;BlogService{
+                blogRepo: blogRepo,
+        }
+}</span>
+
+// Create creates a new blog
+func (s *BlogService) Create(blog *models.Blog, userID uint) error <span class="cov8" title="1">{
+        blog.UserID = userID
+        return s.blogRepo.Create(blog)
+}</span>
+
+// GetByID returns a blog by ID
+func (s *BlogService) GetByID(id uint) (*models.Blog, error) <span class="cov8" title="1">{
+        return s.blogRepo.FindByID(id)
+}</span>
+
+// Update updates a blog
+func (s *BlogService) Update(blog *models.Blog, userID uint) error <span class="cov8" title="1">{
+        // Get the existing blog
+        existingBlog, err := s.blogRepo.FindByID(blog.ID)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        // Check if the user owns the blog
+        <span class="cov8" title="1">if existingBlog.UserID != userID </span><span class="cov8" title="1">{
+                return errors.New("unauthorized: you can only update your own blogs")
+        }</span>
+
+        // Update only allowed fields
+        <span class="cov8" title="1">existingBlog.Title = blog.Title
+        existingBlog.Content = blog.Content
+        existingBlog.Published = blog.Published
+
+        return s.blogRepo.Update(existingBlog)</span>
+}
+
+// Delete deletes a blog
+func (s *BlogService) Delete(id uint, userID uint) error <span class="cov8" title="1">{
+        // Get the existing blog
+        existingBlog, err := s.blogRepo.FindByID(id)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        // Check if the user owns the blog
+        <span class="cov8" title="1">if existingBlog.UserID != userID </span><span class="cov8" title="1">{
+                return errors.New("unauthorized: you can only delete your own blogs")
+        }</span>
+
+        <span class="cov8" title="1">return s.blogRepo.Delete(id)</span>
+}
+
+// List returns a list of blogs with pagination
+func (s *BlogService) List(page, perPage int, publishedOnly bool) ([]models.Blog, int, error) <span class="cov8" title="1">{
+        offset := (page - 1) * perPage
+        return s.blogRepo.List(offset, perPage, publishedOnly)
+}</span>
+
+// ListByUser returns a list of blogs by user with pagination
+func (s *BlogService) ListByUser(userID uint, page, perPage int) ([]models.Blog, int, error) <span class="cov8" title="1">{
+        offset := (page - 1) * perPage
+        return s.blogRepo.ListByUser(userID, offset, perPage)
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package impl
+
+import (
+        "errors"
+
+        "github.com/userblog/management/internal/models"
+        "github.com/userblog/management/internal/repository"
+        "github.com/userblog/management/internal/service"
+)
+
+// UserService implements the IUserService interface
+type UserService struct {
+        userRepo repository.IUserRepository
+}
+
+// NewUserService creates a new user service
+func NewUserService(userRepo repository.IUserRepository) service.IUserService <span class="cov8" title="1">{
+        return &amp;UserService{
+                userRepo: userRepo,
+        }
+}</span>
+
+// Create creates a new user
+func (s *UserService) Create(user *models.User) error <span class="cov8" title="1">{
+        // Check if username already exists
+        existingUser, err := s.userRepo.FindByUsername(user.Username)
+        if err == nil &amp;&amp; existingUser.ID != 0 </span><span class="cov8" title="1">{
+                return errors.New("username already exists")
+        }</span>
+
+        // Check if email already exists
+        <span class="cov8" title="1">existingUser, err = s.userRepo.FindByEmail(user.Email)
+        if err == nil &amp;&amp; existingUser.ID != 0 </span><span class="cov8" title="1">{
+                return errors.New("email already exists")
+        }</span>
+
+        <span class="cov8" title="1">return s.userRepo.Create(user)</span>
+}
+
+// GetByID returns a user by ID
+func (s *UserService) GetByID(id uint) (*models.User, error) <span class="cov8" title="1">{
+        return s.userRepo.FindByID(id)
+}</span>
+
+// Update updates a user
+func (s *UserService) Update(user *models.User) error <span class="cov8" title="1">{
+        // Get the existing user
+        existingUser, err := s.userRepo.FindByID(user.ID)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        // Check if username is being changed and if it already exists
+        <span class="cov8" title="1">if user.Username != existingUser.Username </span><span class="cov8" title="1">{
+                newUser, err := s.userRepo.FindByUsername(user.Username)
+                if err == nil &amp;&amp; newUser.ID != 0 &amp;&amp; newUser.ID != user.ID </span><span class="cov8" title="1">{
+                        return errors.New("username already exists")
+                }</span>
+        }
+
+        // Check if email is being changed and if it already exists
+        <span class="cov8" title="1">if user.Email != existingUser.Email </span><span class="cov8" title="1">{
+                newUser, err := s.userRepo.FindByEmail(user.Email)
+                if err == nil &amp;&amp; newUser.ID != 0 &amp;&amp; newUser.ID != user.ID </span><span class="cov8" title="1">{
+                        return errors.New("email already exists")
+                }</span>
+        }
+
+        // Update only allowed fields
+        <span class="cov8" title="1">existingUser.Username = user.Username
+        existingUser.Email = user.Email
+        existingUser.FirstName = user.FirstName
+        existingUser.LastName = user.LastName
+
+        // Only update password if provided
+        if user.Password != "" </span><span class="cov8" title="1">{
+                existingUser.Password = user.Password
+        }</span>
+
+        // Only admin can change roles
+        <span class="cov8" title="1">if user.RoleID != 0 </span><span class="cov8" title="1">{
+                existingUser.RoleID = user.RoleID
+        }</span>
+
+        <span class="cov8" title="1">return s.userRepo.Update(existingUser)</span>
+}
+
+// Delete deletes a user
+func (s *UserService) Delete(id uint) error <span class="cov8" title="1">{
+        return s.userRepo.Delete(id)
+}</span>
+
+// List returns a list of users with pagination
+func (s *UserService) List(page, perPage int) ([]models.User, int, error) <span class="cov8" title="1">{
+        offset := (page - 1) * perPage
+        return s.userRepo.List(offset, perPage)
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
