@@ -35,7 +35,7 @@ func main() {
 	logger.Info(ctx, "Database connected")
 
 	// Seed database with roles and permissions
-	initializeDatabaseScript(database)
+	//initializeDatabaseScript(database)
 	logger.Info(ctx, "Database schema initialized and seeded with roles and permissions")
 
 	// Initialize repositories with the database connection
