@@ -17,11 +17,11 @@ import (
 
 // AuthService implements the IAuthService interface
 type AuthService struct {
-	userRepo *repository.UserRepository
+	userRepo repository.IUserRepository
 }
 
 // NewAuthService creates a new authentication service
-func NewAuthService(userRepo *repository.UserRepository) service.IAuthService {
+func NewAuthService(userRepo repository.IUserRepository) service.IAuthService {
 	return &AuthService{
 		userRepo: userRepo,
 	}

@@ -7,8 +7,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/joho/godotenv"
-
 	"gopkg.in/yaml.v3"
 )
 
@@ -23,10 +21,10 @@ var (
 
 func init() {
 	// Load environment variables
-	err := godotenv.Load()
-	if err != nil {
-		panic("Error loading .env file, using default values")
-	}
+	//err := godotenv.Load()
+	//if err != nil {
+	//	panic("Error loading .env file, using default values")
+	//}
 	initCache()
 }
 

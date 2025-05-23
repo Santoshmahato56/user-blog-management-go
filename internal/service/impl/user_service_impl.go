@@ -10,11 +10,11 @@ import (
 
 // UserService implements the IUserService interface
 type UserService struct {
-	userRepo *repository.UserRepository
+	userRepo repository.IUserRepository
 }
 
 // NewUserService creates a new user service
-func NewUserService(userRepo *repository.UserRepository) service.IUserService {
+func NewUserService(userRepo repository.IUserRepository) service.IUserService {
 	return &UserService{
 		userRepo: userRepo,
 	}

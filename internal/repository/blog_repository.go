@@ -21,7 +21,7 @@ type BlogRepository struct {
 }
 
 // NewBlogRepository creates a new blog repository with the given database connection
-func NewBlogRepository(database *gorm.DB) *BlogRepository {
+func NewBlogRepository(database *gorm.DB) IBlogRepository {
 	return &BlogRepository{
 		db: database,
 	}
