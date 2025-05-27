@@ -18,19 +18,6 @@ A Go web application that implements user management with dynamic roles and perm
 - JWT for authentication
 - SQLite/PostgreSQL/MySQL database options
 
-## Project Structure
-
-```
-├── api             # API handlers
-├── config          # Configuration
-├── db              # Database connection and migrations
-├── middleware      # Middleware components
-├── models          # Data models
-├── repository      # Data access layer
-├── services        # Business logic
-├── utils           # Utility functions
-└── main.go         # Application entry point
-```
 
 ## Setup and Installation
 
@@ -78,7 +65,3 @@ Permissions include:
 - `read_user` - Can read user information
 - `update_user` - Can update user information
 - `delete_user` - Can delete users
-
-## License
-
-MIT License
